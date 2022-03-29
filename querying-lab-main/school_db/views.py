@@ -59,7 +59,11 @@ SELECT `school_db_student`.`id`,
 # Print out each student's full name and gpa to the terminal
 def problem_one(request):
 
-    print('Hello everyone')
+    students = Student.objects.all()
+    good_students = students.filter(gpa__gt = 3.0).order_by('-gpa')
+
+    for student in good_students:
+      print(f"Full Name: {student.first_name} {student.last_name} GPA: {student.gpa}")
 
     return complete(request)
 
@@ -100,6 +104,12 @@ SELECT `school_db_student`.`id`,
 # Print out the instructor's full name and hire date to the terminal
 def problem_two(request):
 
+    teachers = Instructor.objects.all()
+    old_teachers = teachers.filter(hire_date__year__lt = 2010)
+    ordered_old_teachers = old_teachers.order_by('hire_date')
+
+    for teacher in ordered_old_teachers:
+      print(f"Full Name: {teacher.first_name} {teacher.last_name}\nHire Date: {teacher.hire_date}\n")
 
 
     return complete(request)
@@ -140,6 +150,12 @@ SELECT `school_db_instructor`.`id`,
 # (Do not hard code his name in the print)
 def problem_three(request):
 
+    instructor_2 = Instructor.objects.get(id=2)
+    instructor_2_courses = Course.objects.filter(instructor_id=2)
+
+    print(f"Instructor Name: {instructor_2.first_name} {instructor_2.last_name}\nCourses:")
+    for course in instructor_2_courses:
+      print(f"\t- {course.name}")
 
 
     return complete(request)
@@ -384,11 +400,9 @@ SELECT `school_db_student`.`id`,
 # Print out the instructors full name and number of courses to the console
 def bonus_problem(request):
 
-    Instructor.objects.annotate(num_course=Count(Course.objects.values('instructor_id') == 'id'))
-
-    for each in Instructor.objects.filter(num_course=1):
-      print(each.num_course)
-
+    for instructor in Instructor.objects.all():
+      if (Course.objects.filter(instructor_id = instructor.id).count() == 1):
+        print(f"Instructor Name: {instructor.first_name} {instructor.last_name}")
 
 
 
