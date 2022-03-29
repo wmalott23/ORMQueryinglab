@@ -326,7 +326,7 @@ def problem_seven(request):
 
     # Make sure to set this equal to the primary key of the row you just created!
     student_id = 11
-
+    Student.objects.filter(id=student_id).delete()
 
     try:
         student = Student.objects.get(pk=student_id)
@@ -383,6 +383,12 @@ SELECT `school_db_student`.`id`,
 # Find all of the instructors that only belong to a single course
 # Print out the instructors full name and number of courses to the console
 def bonus_problem(request):
+
+    Instructor.objects.annotate(num_course=Count(Course.objects.values('instructor_id') == 'id'))
+
+    for each in Instructor.objects.filter(num_course=1):
+      print(each.num_course)
+
 
 
 
